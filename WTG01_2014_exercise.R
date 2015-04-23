@@ -1,5 +1,5 @@
 # load data and check attributes
-windScada <- read.csv("./WTG01_2014.csv")
+windScada <- read.csv("./dataset/WTG01_2014.csv")
 windScada
 names(windScada)
 summary(windScada)
