@@ -69,6 +69,7 @@ dataset <- windScada.random.50
 #pairs(Total.active.power~Ambient.WindSpeed.Average+Gear.Bearing.Temperature.Average+Generator.RPM.Average, dataset)
 pairs(Grid.Production.Power.Average~Ambient.WindSpeed.Average+Gear.Bearing.Temperature.Average+Generator.RPM.Average, dataset)
 
+
 subset <- dataset[, 3:132] # remove timestamp, number of wind sensor col.
 subset <- dataset[, 3:10] # remove timestamp col.
 names(subset)
@@ -76,4 +77,5 @@ subset <- scale(subset)
 # Principal Component Analysis
 pr <- princomp(subset) 
 summary(pr)
+
 
