@@ -65,20 +65,36 @@ dataset <- windScada.random.10000
 dataset <- windScada.random.100
 dataset <- windScada.random.50
 
-# clustering by category
-windScada.control <- windScada[, c(11:14, 28:31, 69:100, 123:126, 132)]
-names(windScada.control)
-
 
 # Show scatter plots
 #pairs(Total.active.power~Ambient.WindSpeed.Average+Gear.Bearing.Temperature.Average+Generator.RPM.Average, dataset)
 pairs(Grid.Production.Power.Average~Ambient.WindSpeed.Average+Gear.Bearing.Temperature.Average+Generator.RPM.Average, dataset)
 
+# clustering by category
+windScada.control <- windScada[, c(11:14, 28:31, 69:100, 123:126, 132)]
+names(windScada.control)
 
-subset <- dataset[, 3:132] # remove timestamp, number of wind sensor col.
-subset <- dataset[, 3:10] # remove timestamp, number of wind sensor col.and only 8 cols.
+windScada.env <- windScada[, c(3:10, 106)]
+names(windScada.env)
+
+windScada.mech <- windScada[, c(15:34, 66:68, 101:104, 127:128)]
+names(windScada.mech)
+
+
+windScada.power <- windScada[, c(35:65, 107:122)]
+names(windScada.power)
+
+
+# select a subset clustered by category
+subset <- windScada.control
+subset <- windScada.env 
+subset <- windScada.mech
+subset <- windScada.power
+
 names(subset)
-subset <- scale(subset)
+
+subset <- scale(subset) # normalize it (only env value can be mornalized)
+
 # Principal Component Analysis
 pr <- princomp(subset) 
 summary(pr)
