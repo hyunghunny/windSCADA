@@ -68,3 +68,7 @@ dataset <- windScada.random.50
 # Show scatter plots
 #pairs(Total.active.power~Ambient.WindSpeed.Average+Gear.Bearing.Temperature.Average+Generator.RPM.Average, dataset)
 pairs(Grid.Production.Power.Average~Ambient.WindSpeed.Average+Gear.Bearing.Temperature.Average+Generator.RPM.Average, dataset)
+
+
+test 123
+asb
