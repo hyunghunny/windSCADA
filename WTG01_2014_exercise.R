@@ -77,7 +77,7 @@ names(windScada.control)
 windScada.env <- windScada[, c(3:10, 106)]
 names(windScada.env)
 
-windScada.mech <- windScada[, c(15:34, 66:68, 101:104, 127:128)]
+windScada.mech <- windScada[, c(15:26, 32:34, 66:68, 101:104, 127:128)]
 names(windScada.mech)
 
 
@@ -96,9 +96,29 @@ names(subset)
 subset <- scale(subset) # normalize it (only env value can be mornalized)
 
 # Principal Component Analysis
-pr <- princomp(subset) 
-summary(pr)
-biplot(pr)
-summary(pr$scores)
+pr.control <- princomp(windScada.control) 
+summary(pr.control)
+biplot(pr.control)
+warnings()
+pca.control = pr.control$scores[, 1] # Contains 0.99 Cumulative Proposition
+
+pr.env <- princomp(windScada.env) 
+summary(pr.env)
+biplot(pr.env)
+warnings()
+pca.env = pr.env$scores[, 1:3] # Contains 0.99 Cumulative Proposition
+
+pr.mech <- princomp(windScada.mech) 
+summary(pr.mech)
+biplot(pr.mech)
+warnings()
+pca.mech = pr.mech$scores[, 1:9] # Contains 0.99 Cumulative Proposition
+
+pr.power <- princomp(windScada.power) 
+summary(pr.power)
+biplot(pr.power)
+warnings()
+pca.power = pr.power$scores[, 1:2]
+
 
 
