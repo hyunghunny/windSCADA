@@ -1,6 +1,8 @@
-# load data and check attributes
-windScada <- read.csv("./dataset/WTG01_2014.csv")
+# load data
+source('./codes/dataloader.R')
+windScada <- load_scada_data('WTG01', '2014')
 windScada
+# Check attributes and statistics
 names(windScada)
 summary(windScada)
 dim(windScada)
@@ -14,22 +16,29 @@ windScada.random.10000 <- windScada[sample(NROW(windScada), 10000), ]
 windScada.random.100 <- windScada[sample(NROW(windScada), 100), ]
 windScada.random.50 <- windScada[sample(NROW(windScada), 50), ]
 
+# select wind speed properties
 wind.speed.avg <- windScada$Ambient.WindSpeed.Average
 wind.speed.max <- windScada$Ambient.WindSpeed.Maximum
 summary(wind.speed.avg)
 summary(wind.speed.max)
-# what is the exact power?
+
+# what is the exact power? -> Grid Production Power Average
 #power <- windScada$Total.active.power
 power <- windScada$Grid.Production.Power.Average
 
+# Unit change to kiloWatt 
 power.kW <- power / 1000
 summary(power.kW)
+
+# Show wind plot with kW
 plot(wind.speed.avg, power.kW)
 plot(wind.speed.max, power.kW)
 
+# Show power plot
 power.reactive <- windScada$Total.reactive.power
 plot (power.reactive, power)
 
+# Select gear properties
 gear.bearing.temp.avg <- windScada$Gear.Bearing.Temperature.Average
 gear.oil.temp.avg <- windScada$Gear.Oil.Temperature.Average
 
@@ -37,16 +46,17 @@ summary(gear.bearing.temp.avg)
 summary(gear.oil.temp.avg)
 
 # guess gear's bearing temperature and oil's are corelated. 
+# Show plots
 plot (gear.bearing.temp.avg, gear.oil.temp.avg)
-
 plot(wind.speed.max, gear.bearing.temp.avg)
 
+
+# Show the relationship with temp and power
 ambient.temp.avg <- windScada$Ambient.Temperature.Average
 summary(ambient.temp.avg)
-
-#show the relationship with temp and power
 plot(ambient.temp.avg, power.kW)
 
+# Select generator's properties
 generator.rpm.avg <- windScada$Generator.RPM.Average
 summary(generator.rpm.avg)
 plot(generator.rpm.avg, power.kW)
@@ -57,7 +67,7 @@ plot(rotor.rpm.avg, power.kW)
 turbine.state <- windScada$System.States.TurbineState
 summary(turbine.state)
 
-# Select dataset
+# Select dataset to reduce points 
 dataset <- windScada
 dataset <- windScada.head.10000
 dataset <- windScada.tail.10000
@@ -93,7 +103,7 @@ subset <- windScada.power
 
 names(subset)
 
-subset <- scale(subset) # normalize it (only env value can be mornalized)
+subset <- scale(subset) # normalize it (XXX:only env value can be mornalized)
 
 # Principal Component Analysis
 pr.control <- princomp(windScada.control) 
