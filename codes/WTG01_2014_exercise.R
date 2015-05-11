@@ -79,6 +79,7 @@ dataset <- windScada.random.10000
 dataset <- windScada.random.100
 dataset <- windScada.random.50
 
+# TODO: label the plots to distinguish it
 
 # Show scatter plots
 #pairs(Total.active.power~Ambient.WindSpeed.Average+Gear.Bearing.Temperature.Average+Generator.RPM.Average, dataset)
