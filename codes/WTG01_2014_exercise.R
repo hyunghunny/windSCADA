@@ -1,7 +1,11 @@
 # load data
 source('./codes/dataloader.R')
-windScada <- load_scada_data('WTG01', '2014')
-windScada
+#windScada <- load_scada_data('WTG01', '2014')
+s <- scada()
+windScada = s$data()
+s$size()
+is.data.frame(windScada)
+
 # Check attributes and statistics
 names(windScada)
 summary(windScada)
@@ -80,18 +84,39 @@ dataset <- windScada.random.50
 #pairs(Total.active.power~Ambient.WindSpeed.Average+Gear.Bearing.Temperature.Average+Generator.RPM.Average, dataset)
 pairs(Grid.Production.Power.Average~Ambient.WindSpeed.Average+Gear.Bearing.Temperature.Average+Generator.RPM.Average, dataset)
 
+# Plot trend graph of bearing temp for the year 
+plot(windScada$PCTimeStamp,windScada$Gear.Bearing.Temperature.Average)
+
+# Plot histogram graph of bearing temp for the year  
+hist(windScada$Gear.Bearing.Temperature.Average,breaks=10)
+
+# Data filtering to remove data when wind speed was above 10 m/s  
+# FilteredSCADA <- windScada[windScada$Ambient.WindSpeed.Average>10]
+FilteredSCADA <- subset(windScada,windScada$Ambient.WindSpeed.Average>10)
+FilteredSCADA2 <- FilteredSCADA[,2:10] #taking 9 variables only. there are 138 variables in total, and not all of them are used for the work 
+
+# plotting
+hist(FilteredSCADA$Gear.Bearing.Temperature.Average,breaks=10) #plot histogram
+plot(FilteredSCADA$PCTimeStamp,FilteredSCADA$Gear.Bearing.Temperature.Average) #plot time trend for bearing temp
+plot(FilteredSCADA$PCTimeStamp,FilteredSCADA$Ambient.Temperature.Average) #plot time trend for ambient temp 
+plot(FilteredSCADA$PCTimeStamp,FilteredSCADA$Gear.Oil.Temperature.Average) #plot time trend for gear oil temp 
+pairs(windScada$Ambient.Temperature.Average~windScada$Gear.Oil.Temperature.Average+windScada$Gear.Bearing.Temperature.Average)#plot scatter 
+y<-princomp(windScada[,2:8]) #pca
+biplot(y) #biplot for pca
+
+
 # clustering by category
-windScada.control <- windScada[, c(11:14, 28:31, 69:100, 123:126, 132)]
+windScada.control <- s$control()
 names(windScada.control)
 
-windScada.env <- windScada[, c(3:10, 106)]
+windScada.env <- s$env()
 names(windScada.env)
 
-windScada.mech <- windScada[, c(15:26, 32:34, 66:68, 101:104, 127:128)]
+windScada.mech <- s$mech()
 names(windScada.mech)
 
 
-windScada.power <- windScada[, c(35:65, 107:122)]
+windScada.power <- s$power()
 names(windScada.power)
 
 
