@@ -7,18 +7,14 @@ s$size()
 is.data.frame(windScada)
 
 # Check attributes and statistics
-names(windScada)
-summary(windScada)
-dim(windScada)
-class(windScada)
-NROW(windScada)
+show_basic_statistics <- function () {
+  names(windScada)
+  summary(windScada)
+  dim(windScada)
+  class(windScada)
+  NROW(windScada)  
+}
 
-# sampling data 
-windScada.head.10000 <- head(windScada, n=10000)
-windScada.tail.10000 <- tail(windScada, n=10000)
-windScada.random.10000 <- windScada[sample(NROW(windScada), 10000), ]
-windScada.random.100 <- windScada[sample(NROW(windScada), 100), ]
-windScada.random.50 <- windScada[sample(NROW(windScada), 50), ]
 
 # select wind speed properties
 wind.speed.avg <- windScada$Ambient.WindSpeed.Average
@@ -71,13 +67,22 @@ plot(rotor.rpm.avg, power.kW)
 turbine.state <- windScada$System.States.TurbineState
 summary(turbine.state)
 
+
+# sampling data 
+windScada.head.10000 <- head(windScada, n=10000)
+windScada.tail.10000 <- tail(windScada, n=10000)
+windScada.random.10000 <- windScada[sample(NROW(windScada), 10000), ]
+windScada.random.1000 <- windScada[sample(NROW(windScada), 100), ]
+windScada.random.100 <- windScada[sample(NROW(windScada), 100), ]
+windScada.random.50 <- windScada[sample(NROW(windScada), 50), ]
+
 # Select dataset to reduce points 
-dataset <- windScada
-dataset <- windScada.head.10000
-dataset <- windScada.tail.10000
+#dataset <- windScada
+#dataset <- windScada.head.10000
+#dataset <- windScada.tail.10000
 dataset <- windScada.random.10000 
-dataset <- windScada.random.100
-dataset <- windScada.random.50
+#dataset <- windScada.random.100
+#dataset <- windScada.random.50
 
 # TODO: label the plots to distinguish it
 
@@ -86,22 +91,22 @@ dataset <- windScada.random.50
 pairs(Grid.Production.Power.Average~Ambient.WindSpeed.Average+Gear.Bearing.Temperature.Average+Generator.RPM.Average, dataset)
 
 # Plot trend graph of bearing temp for the year 
-plot(windScada$PCTimeStamp,windScada$Gear.Bearing.Temperature.Average)
+plot(dataset$PCTimeStamp,dataset$Gear.Bearing.Temperature.Average)
 
 # Plot histogram graph of bearing temp for the year  
-hist(windScada$Gear.Bearing.Temperature.Average,breaks=10)
+hist(dataset$Gear.Bearing.Temperature.Average,breaks=10)
 
 # Data filtering to remove data when wind speed was above 10 m/s  
 # FilteredSCADA <- windScada[windScada$Ambient.WindSpeed.Average>10]
-FilteredSCADA <- subset(windScada,windScada$Ambient.WindSpeed.Average>10)
+FilteredSCADA <- subset(dataset, dataset$Ambient.WindSpeed.Average>10)
 FilteredSCADA2 <- FilteredSCADA[,2:10] #taking 9 variables only. there are 138 variables in total, and not all of them are used for the work 
 
 # plotting
-hist(FilteredSCADA$Gear.Bearing.Temperature.Average,breaks=10) #plot histogram
-plot(FilteredSCADA$PCTimeStamp,FilteredSCADA$Gear.Bearing.Temperature.Average) #plot time trend for bearing temp
-plot(FilteredSCADA$PCTimeStamp,FilteredSCADA$Ambient.Temperature.Average) #plot time trend for ambient temp 
-plot(FilteredSCADA$PCTimeStamp,FilteredSCADA$Gear.Oil.Temperature.Average) #plot time trend for gear oil temp 
-pairs(windScada$Ambient.Temperature.Average~windScada$Gear.Oil.Temperature.Average+windScada$Gear.Bearing.Temperature.Average)#plot scatter 
+hist(FilteredSCADA$Gear.Bearing.Temperature.Average, breaks=10) #plot histogram
+plot(FilteredSCADA$PCTimeStamp, FilteredSCADA$Gear.Bearing.Temperature.Average) # plot time trend for bearing temp
+plot(FilteredSCADA$PCTimeStamp, FilteredSCADA$Ambient.Temperature.Average) #plot time trend for ambient temp 
+plot(FilteredSCADA$PCTimeStamp, FilteredSCADA$Gear.Oil.Temperature.Average) #plot time trend for gear oil temp 
+pairs(dataset$Ambient.Temperature.Average~dataset$Gear.Oil.Temperature.Average+dataset$Gear.Bearing.Temperature.Average)#plot scatter 
 #y<-princomp(windScada[,2:8]) #pca
 #biplot(y) #biplot for pca
 
