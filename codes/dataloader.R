@@ -7,8 +7,13 @@ load_scada_data <- function (turbine.id, year) {
   return (windScada)
 }
 
-# data loader by module pattern
-# by default, WTG01/2014 will be used.
+##
+# SCADA data loader by module pattern
+# @param turbine.id turbine ID
+# @param year year of measurement
+#
+# @comment by default, WTG01/2014 will be used.
+#
 scada <- function (turbine.id='WTG01', year='2014') {
   
   # concanterate strings for making csv file path
@@ -25,6 +30,11 @@ scada <- function (turbine.id='WTG01', year='2014') {
   # returns size of data rows 
   size <- function () {
     return (scada.data.size)
+  }
+  
+  # returns time series
+  time <- function () {
+    return (as.ts(scada.data$PCTimeStamp))
   }
   
   # returns control associated features only
@@ -47,5 +57,5 @@ scada <- function (turbine.id='WTG01', year='2014') {
     return (scada.data[, c(35:65, 107:122)])
   }  
   
-  return (list(data=data, size=size, control=control, env=env, mech=mech, power=power))
+  return (list(data=data, size=size, time=time, control=control, env=env, mech=mech, power=power))
 }

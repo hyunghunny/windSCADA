@@ -103,7 +103,7 @@ FilteredSCADA2 <- FilteredSCADA[,2:10] #taking 9 variables only. there are 138 v
 
 # plotting
 hist(FilteredSCADA$Gear.Bearing.Temperature.Average, breaks=10) #plot histogram
-plot(FilteredSCADA$PCTimeStamp, FilteredSCADA$Gear.Bearing.Temperature.Average) # plot time trend for bearing temp
+plot(as.ts(FilteredSCADA$PCTimeStamp), FilteredSCADA$Gear.Bearing.Temperature.Average) # plot time trend for bearing temp
 plot(FilteredSCADA$PCTimeStamp, FilteredSCADA$Ambient.Temperature.Average) #plot time trend for ambient temp 
 plot(FilteredSCADA$PCTimeStamp, FilteredSCADA$Gear.Oil.Temperature.Average) #plot time trend for gear oil temp 
 pairs(dataset$Ambient.Temperature.Average~dataset$Gear.Oil.Temperature.Average+dataset$Gear.Bearing.Temperature.Average)#plot scatter 
