@@ -98,11 +98,6 @@ plot(parsed_date,dataset$Gear.Bearing.Temperature.Average)
 hist(dataset$Gear.Bearing.Temperature.Average,breaks=10)
 
 #  convert the PCTimeStamp as Date type. 
-timestamps <- levels(dataset$PCTimeStamp)
-windScada$PCTimeStamp <- gsub("/14 ", "/2014 ", windScada$PCTimeStamp)
-timestamps <- windScada$PCTimeStamp
-
-windScada$PCTimeStamp <- strptime(timestamps, "%m/%d/%Y %H:%M")
 
 # plotting
 hist(windScada$Gear.Bearing.Temperature.Average, breaks=10) #plot histogram
