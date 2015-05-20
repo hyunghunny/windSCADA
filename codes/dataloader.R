@@ -21,6 +21,7 @@ scada <- function (turbine.id='WTG01', year='2014') {
   fileName <- paste(c(turbine.id, '_', year, '.csv'), collapse='')
   path <- paste(c(path, fileName), collapse='/')  
   scada.data <- read.csv(path)
+  scada.data$PCTimeStamp <- as.ts(scada.data$PCTimeStamp) # timestamp formatting
   scada.data.size <- NROW(scada.data)
   
   # returns full dataset
@@ -34,7 +35,7 @@ scada <- function (turbine.id='WTG01', year='2014') {
   
   # returns time series
   time <- function () {
-    return (as.ts(scada.data$PCTimeStamp))
+    return (scada.data$PCTimeStamp)
   }
   
   # returns control associated features only

@@ -77,10 +77,10 @@ windScada.random.100 <- windScada[sample(NROW(windScada), 100), ]
 windScada.random.50 <- windScada[sample(NROW(windScada), 50), ]
 
 # Select dataset to reduce points 
-#dataset <- windScada
+dataset <- windScada
 #dataset <- windScada.head.10000
 #dataset <- windScada.tail.10000
-dataset <- windScada.random.10000 
+#dataset <- windScada.random.10000 
 #dataset <- windScada.random.100
 #dataset <- windScada.random.50
 
@@ -99,11 +99,18 @@ hist(dataset$Gear.Bearing.Temperature.Average,breaks=10)
 # Data filtering to remove data when wind speed was above 10 m/s  
 # FilteredSCADA <- windScada[windScada$Ambient.WindSpeed.Average>10]
 FilteredSCADA <- subset(dataset, dataset$Ambient.WindSpeed.Average>10)
-FilteredSCADA2 <- FilteredSCADA[,2:10] #taking 9 variables only. there are 138 variables in total, and not all of them are used for the work 
+FilteredSCADA2 <- FilteredSCADA[,2:10] #taking 9 parameters only. there are 138 parameters in total, and not all of them are used for the work 
+
+parsed <- strptime(s$time(), "%Y-%m-%d %H:%M:%S")
+
+parsed_date = format(parsed, "%Y-%m-%d")
+parsed_weekday = weekdays(as.Date(parsed_date))
+parsed_time = format(parsed, "%H:%M")
 
 # plotting
 hist(FilteredSCADA$Gear.Bearing.Temperature.Average, breaks=10) #plot histogram
-plot(as.ts(FilteredSCADA$PCTimeStamp), FilteredSCADA$Gear.Bearing.Temperature.Average) # plot time trend for bearing temp
+plot(parsed_date, FilteredSCADA$Gear.Bearing.Temperature.Average) # plot time trend for bearing temp
+
 plot(FilteredSCADA$PCTimeStamp, FilteredSCADA$Ambient.Temperature.Average) #plot time trend for ambient temp 
 plot(FilteredSCADA$PCTimeStamp, FilteredSCADA$Gear.Oil.Temperature.Average) #plot time trend for gear oil temp 
 pairs(dataset$Ambient.Temperature.Average~dataset$Gear.Oil.Temperature.Average+dataset$Gear.Bearing.Temperature.Average)#plot scatter 
