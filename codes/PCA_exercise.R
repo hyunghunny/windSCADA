@@ -80,9 +80,24 @@ pca <- function(windturbine.id, year) {
   return (list(run=run, control=control, env=env, mech=mech, power=power))
 }
 
-windturbine.id <- 'WTG01'
-year <- 2011
 
-pca.runner <- pca(windturbine.id, year)
-pca.runner$run()
-pca.runner$summary()
+##
+# draw PCA plots for all years of a specific wind turbine.
+# @param windturbine.id ID of wind turbine
+# @param from the start year of measurement
+# @param to the end year of measurement
+#
+pca_years <- function (windturbine.id, from, to) {
+  for (year in seq(from, to)) {
+    print (toString(year))
+    pca.runner <- pca(windturbine.id, year)
+    
+    pca.runner$run()
+    # exception handling if error occurred
+    #tryCatch(pca.runner$run(), error=function(err)  print "error", finally=print "finished" )    
+  }
+}
+
+# PCA plotting of a specific wind turbine for years
+
+pca_years("WTG02", 2010, 2014)

@@ -1,13 +1,13 @@
 # load data
 source('./codes/dataloader.R')
 #windScada <- load_scada_data('WTG01', '2014')
-s <- scada('WTG01', '2014')
+s <- scada('WTG02', '2013')
 windScada = s$data()
 s$size()
 is.data.frame(windScada)
 
 # Check attributes and statistics
-show_basic_statistics <- function () {
+show_basic_statistics <- function (windScada) {
   names(windScada)
   summary(windScada)
   dim(windScada)
@@ -111,6 +111,15 @@ pairs(dataset$Ambient.Temperature.Average~dataset$Gear.Oil.Temperature.Average+d
 #biplot(y) #biplot for pca
 
 
+summary(s$power())
+
+# simple tric to avoid for looping by jy.han (very thx)
+power_range = sapply(s$power(),range)
+power_range = unlist(power_range)
+
+# TODO:jy.han's suggestion
+# calcuate eigen value for each clusters
+# distinguish the most outstanding feature(s)
 
 
 
