@@ -2,7 +2,7 @@
 source('./codes/dataloader.R')
 #windScada <- load_scada_data('WTG01', '2014')
 s <- scada('WTG01', '2014')
-windScada = s$data()
+windScada <- s$data()
 s$size()
 is.data.frame(windScada)
 
@@ -77,8 +77,8 @@ windScada.random.100 <- windScada[sample(NROW(windScada), 100), ]
 windScada.random.50 <- windScada[sample(NROW(windScada), 50), ]
 
 # Select dataset to reduce points 
-dataset <- head(windScada, n=300)
-#dataset <- windScada.head.10000
+#dataset <- windScada
+dataset <- windScada.head.10000
 #dataset <- windScada.tail.10000
 #dataset <- windScada.random.10000 
 #dataset <- windScada.random.100
@@ -97,19 +97,18 @@ plot(parsed_date,dataset$Gear.Bearing.Temperature.Average)
 # Plot histogram graph of bearing temp for the year  
 hist(dataset$Gear.Bearing.Temperature.Average,breaks=10)
 
-# FIXME: I couldn't convert the PCTimeStamp as Date type. Help ME!
-timestamps <- as.POSIXct(levels(dataset$PCTimeStamp), tz=Sys.timezone(), format="%m-%d-%y %H:%M")
-timestamps <- levels(dataset$PCTimeStamp) 
-parsed <- strptime(timestamps, "%m-%d-%y %H:%M")
-parsed_date = format(parsed, "%Y-%m-%d")
-parsed_weekday = weekdays(as.Date(parsed_date))
-parsed_time = format(parsed, "%H:%M")
+#  convert the PCTimeStamp as Date type. 
+timestamps <- levels(dataset$PCTimeStamp)
+windScada$PCTimeStamp <- gsub("/14 ", "/2014 ", windScada$PCTimeStamp)
+timestamps <- windScada$PCTimeStamp
+
+windScada$PCTimeStamp <- strptime(timestamps, "%m/%d/%Y %H:%M")
 
 # plotting
-hist(dataset$Gear.Bearing.Temperature.Average, breaks=10) #plot histogram
-plot(as.Date(dataset$PCTimeStamp, "%Y-%m-%d"), dataset$Gear.Bearing.Temperature.Average) # plot time trend for bearing temp
+hist(windScada$Gear.Bearing.Temperature.Average, breaks=10) #plot histogram
+plot(as.Date(windScada$PCTimeStamp, "%Y-%m-%d"), windScada$Gear.Bearing.Temperature.Average) # plot time trend for bearing temp
 
-plot(parsed_date, dataset$Ambient.Temperature.Average) #plot time trend for ambient temp 
+plot(as.Date(windScada$PCTimeStamp, "%Y-%m-%d"), windScada$Ambient.Temperature.Average) #plot time trend for ambient temp 
 
 
 plot(parsed_date, dataset$Gear.Oil.Temperature.Average) #plot time trend for gear oil temp 
