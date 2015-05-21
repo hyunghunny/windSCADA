@@ -27,4 +27,4 @@ windScada <- s$data()
 dataset <- subset(windScada, windScada$Ambient.WindSpeed.Average > 10)
 
 #plot time trend for gear oil temp 
-plot(as.Date(dataset$PCTimeStamp, "%Y-%m-%d"), dataset$Gear.Oil.Temperature.Average, main='Gear Oil Temperature Trend', xlab='Date', ylab='Temperature')
+plot(as.Date(dataset$PCTimeStamp, "%M-%d"), dataset$Gear.Oil.Temperature.Average, main='Gear Oil Temperature Trend', xlab='Date', ylab='Temperature')
