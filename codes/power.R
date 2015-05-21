@@ -18,6 +18,7 @@ showPowerCurve <- function (s) {
   power.kW <- power / 1000
   #summary(power.kW)
   
+<<<<<<< HEAD
   plot.title <- paste(c(s$title(), 'Power', 'Curve'), collapse='-')
   # Show wind/power plot with kW
   plot(wind.speed.avg, power.kW, main=plot.title, 
