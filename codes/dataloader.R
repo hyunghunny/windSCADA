@@ -19,13 +19,19 @@ scada <- function (turbine.id='WTG01', year='2014') {
   # concanterate strings for making csv file path
   path <- "./data"  
   fileName <- paste(c(turbine.id, '_', year, '.csv'), collapse='')
-  path <- paste(c(path, fileName), collapse='/')  
+  path <- paste(c(path, fileName), collapse='/') 
+  scada.title <- paste(c(turbine.id, year), collapse='-') 
   scada.data <- read.csv(path)
   scada.data.size <- NROW(scada.data)
   
   # timestamp formatting
-  windScada$PCTimeStamp <- gsub("/14 ", "/2014 ", windScada$PCTimeStamp)
-  windScada$PCTimeStamp <- strptime(windScada$PCTimeStamp, "%m/%d/%Y %H:%M")
+  #scada.data$PCTimeStamp <- gsub("/14 ", "/2014 ", scada.data$PCTimeStamp)
+  scada.data$PCTimeStamp <- strptime(scada.data$PCTimeStamp, "%m/%d/%y %H:%M")
+  
+  # return data title
+  title <- function() {
+    return (scada.title)
+  }
   
   # returns full dataset
   data <- function () {
@@ -37,29 +43,29 @@ scada <- function (turbine.id='WTG01', year='2014') {
   }
   
   # returns time series
-  time <- function () {
-    return (scada.data$PCTimeStamp)
+  date <- function () {
+    return (as.Date(scada.data$PCTimeStamp, "%Y-%m-%d"))
   }
   
   # returns control associated features only
-  control <- function () {
+  controls <- function () {
     return (scada.data[, c(11:14, 28:31, 69:100, 123:126, 132)])
   }
   
   # returns environment associated features only
-  env <- function () {
+  envs <- function () {
     return (scada.data[, c(3:10, 106)])
   }
   
   # returns mechanic assoicated features only
-  mech <- function () {
+  mechs <- function () {
     return (scada.data[, c(15:26, 32:34, 66:68, 101:104, 127:128)])
   }
   
-  # returns power associated power 
-  power <- function () {
+  # returns power associated features only
+  powers <- function () {
     return (scada.data[, c(35:65, 107:122)])
   }  
   
-  return (list(data=data, size=size, time=time, control=control, env=env, mech=mech, power=power))
+  return (list(title=title, data=data, size=size, date=date, control=controls, env=envs, mech=mechs, power=powers))
 }
