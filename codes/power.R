@@ -21,7 +21,7 @@ showPowerCurve <- function (s) {
   plot.title <- paste(c(s$title(), 'Power', 'Curve'), collapse='-')
   # Show wind/power plot with kW
   plot(wind.speed.avg, power.kW, main=plot.title, 
-       xlab='wind speed (10min. avg.)', ylab='Power (kW)')
+       xlab='wind speed (m/s)', ylab='Power (kW)')
   
   #plot(wind.speed.max, power.kW)
   
@@ -35,7 +35,7 @@ showPowerCurve <- function (s) {
 # sample test
 
 source('./codes/dataloader.R')
-s <- scada('WTG04', '2014')
+s <- scada('WTG04', '2013')
 showPowerCurve(s)
 
 summary(s$power())

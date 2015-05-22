@@ -3,6 +3,9 @@
 #
 
 showGearPlots <- function (s) {
+  
+  windScada <- s$data()
+  
   # Select gear properties
   gear.bearing.temp.avg <- windScada$Gear.Bearing.Temperature.Average
   gear.oil.temp.avg <- windScada$Gear.Oil.Temperature.Average
