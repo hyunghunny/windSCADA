@@ -35,9 +35,10 @@ showPowerCurve <- function (s) {
 # sample test
 
 source('./codes/dataloader.R')
-s <- scada('WTG04', '2013')
-showPowerCurve(s)
-
+for (year in seq(2008, 2014)) {
+  s <- scada('WTG14', year)
+  showPowerCurve(s)
+}
 summary(s$power())
 
 # simple tric to avoid for looping by jy.han (very thx)
