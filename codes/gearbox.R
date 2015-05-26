@@ -26,8 +26,14 @@ source('./codes/dataloader.R')
 s <- scada('WTG01', '2014')
 windScada <- s$data()
 
+dataset <- windScada
 # Data filtering to remove data when wind speed was above 10 m/s
-dataset <- subset(windScada, windScada$Ambient.WindSpeed.Average > 10)
+dataset <- subset(windScada, windScada$Ambient.WindSpeed.Average < 3)
+
+# plot wind speed - gear oil temp
+plot(dataset$Ambient.WindSpeed.Average, dataset$Gear.Oil.Temperature.Average, main='Gear Oil Temperature', xlab='Wind (m/s)', ylab='Temperature (celsius)')
+
 
 #plot time trend for gear oil temp 
 plot(as.Date(dataset$PCTimeStamp, "%M-%d"), dataset$Gear.Oil.Temperature.Average, main='Gear Oil Temperature Trend', xlab='Date', ylab='Temperature')
+

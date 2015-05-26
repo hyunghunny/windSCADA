@@ -4,34 +4,60 @@
 # refer to the paper "online wind turbine fault detection through automated SCADA data analysis"
 
 source('./codes/dataloader.R')
-s <- scada('WTG01', '2014')
+s <- scada('WTG04', '2014')
 
 windScada <- s$data()
-windScada.t <- tail(windScada, n=10394)
-windScada.t_1_2 <- subset(windScada, condition)# TODO subset data t-1 through t-2 
-windScada.t_3 <- head(windScada, n=10393)
 
-# gear box bearing model
-# TODO:time spanning required
-input.bearing.temp. <- windScada$Gear.Bearing.Temperature.Average # TODO:(t-1) (t-2)
-input.power <- windScada.t_3$Grid.Production.Power.Average 
-input.nacelle.temp <- windScada.t$Nacelle.Temperature.Average 
-output.bearing.temp <- windScada$Gear.Bearing.Temperature.Average
-
-# cooling oil temp model
-input.oil.temp <- windScada$Gear.Oil.Temperature.Average # TODO: (t-1) (t-2)
-input.power <- windScada.t_3$Grid.Production.Power.Average
-input.nacelle.temp <- windScada.t$Nacelle.Temperature.Average
-output.oil.temp <- windScada$Gear.Oil.Temperature.Average
+t.month <- 4 # base time span ()
 
 
-formula # TODO create model formular
-train.data # TODO create training dataset
-test.data # TODO create test dataset
+# |----------|----------|----------|----------|
+#      t-3       t-2        t-1         t
 
-weights <- 27 # TODO What will be a right weights value?
-hidden.layer.size <- 3 # TODO What will be a right size?
+windScada.t <- s$month(t.month)[1:4000,]
+windScada.t1 <- s$month(t.month-1)[1:4000,]
+windScada.t2 <- s$month(t.month-2)[1:4000,]
+windScada.t3 <- s$month(t.month-3)[1:4000,]
 
+
+# won's suggested model
+input.oil.temp <- windScada.t$Gear.Oil.Temperature.Average
+input.bearing.temp.t1 <- windScada.t1$Gear.Bearing.Temperature.Average
+input.bearing.temp.t2 <- windScada.t2$Gear.Bearing.Temperature.Average
+input.power <- windScada.t$Grid.Production.Power.Average
+input.ambient.temp <-windScada.t$Ambient.Temperature.Average
+output.bearing.temp <- windScada.t$Gear.Bearing.Temperature.Average
+
+
+#  create training dataset
+train.data <- data.frame( x1=input.oil.temp,
+                          x2=input.bearing.temp.t1,
+                          x3=input.bearing.temp.t2,
+                          x4=input.power,
+                          x5=input.ambient.temp,
+                          y=output.bearing.temp )
+
+# TODO normalize training data
+
+
+
+# Training with Neural Network
 library(nnet)
-ann.model <- nnet(formula, train.data, weights, size=hidden.layer.size)
+seed.val <- 2
+hidden.layer.size <- 3 # TODO What will be a right size?
+set.seed(seed.val)
+ann.model <- nnet(y ~., train.data, size=hidden.layer.size, linout=T)
+
+# plotting with plot.nnet
+library(clusterGeneration)
+library(devtools)
+
+#import the function from Github
+source_url('https://gist.githubusercontent.com/Peque/41a9e20d6687f2f3108d/raw/85e14f3a292e126f1454864427e3a189c2fe33f3/nnet_plot_update.r')
+plot.nnet(ann.model, alpha.val = 0.5, circle.col = list('lightgray', 'white'), bord.col = 'black')
+
+
+# prediction with test data
+# TODO create test dataset
+test.data <- NA
 predict(ann.model, newdata=test.data)
