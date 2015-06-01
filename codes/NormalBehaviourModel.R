@@ -19,7 +19,7 @@ dataloading <- function (turbine='WTG01', yr='2014',start=0, end=10000) {
 }
 
 # Prepare training data
-training.data<-dataloading('WTG01','2014',0,1000)
+training.data<-dataloading('WTG01','2010',10000,30000)
 
 # Training with Neural Network
 library(nnet)
@@ -39,7 +39,7 @@ plot.nnet(ann.model, alpha.val = 0.5, circle.col = list('lightgray', 'white'), b
 ## Testing ## 
 #
 #
-test.data<-dataloading('WTG01','2014',1001,2000)
+test.data<-dataloading('WTG01','2010',20000,25000)
 test.expected.output<-test.data[,4]
 test.data<-test.data[,1:3]
 test.nnet.result<-data.frame(predict(ann.model, newdata=test.data,type="raw"))
@@ -72,7 +72,7 @@ ggplot(test.resultplot, aes(x, residual)) + geom_point(colour="green") + geom_li
 ## Prediction ## 
 #
 #
-predict.data<-dataloading('WTG01','2014',15001,20000)
+predict.data<-dataloading('WTG01','2014',1,40000)
 predict.expected.output<-predict.data[,4]
 predict.data<-predict.data[,1:3]
 predict.nnet.result<-data.frame(predict(ann.model, newdata=predict.data,type="raw"))
